@@ -1,20 +1,14 @@
 package org.justinhj
 
-// Created by https://github.com/justinhj/fp-starter-pack.g8
-// Simple ZIO App
+object Myshoppingcartclient {
 
-import zio.App
-import zio.console._
+ def main(args: Array[String]) {
 
-object Myshoppingcartclient extends App {
+  val host = "localhost"
+  val port = 9000
 
-  def run(args: List[String]) =
-    myAppLogic.fold(_ => 1, _ => 0)
+  println("Hello!")
 
-  val myAppLogic =
-    for {
-      _ <- putStrLn("Hello! What is your name?")
-      n <- getStrLn
-      _ <- putStrLn(s"Hello, ${n}, welcome to ZIO!")
-    } yield ()
+
+ }
 }

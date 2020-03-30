@@ -44,7 +44,6 @@ val CatsEffectVersion = "2.1.1"
 val MonixVersion = "3.1.0"
 val ZIOVersion = "1.0.0-RC18"
 val ShapelessVersion = "2.3.3"
-val FS2Version = "2.2.2"
 val AmmoniteVersion = "2.0.0"
 
 libraryDependencies ++= Seq(
@@ -58,28 +57,21 @@ libraryDependencies ++= Seq(
   // Cats
   "org.typelevel" %% "cats-core" % CatsVersion,
   "org.typelevel" %% "cats-effect" % CatsEffectVersion,
-  // fs2
-  "co.fs2" %% "fs2-core" % FS2Version,
   // monix
   "io.monix" %% "monix" % MonixVersion,
-  // shapeless
-  "com.chuusai" %% "shapeless" % ShapelessVersion,
-  // scalaz
+  "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
+  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
+  // ZIO
   "dev.zio" %% "zio" % ZIOVersion,
   "dev.zio" %% "zio-streams" % ZIOVersion,
-  // type classes
-  "com.github.mpilquist" %% "simulacrum" % "0.12.0",
   // li haoyi ammonite repl embed
   "com.lihaoyi" % "ammonite" % AmmoniteVersion % "test" cross CrossVersion.full
 )
 
 //ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
-resolvers ++= Seq(
-  "Typesafe Snapshots" at "http://repo.typesafe.com/typesafe/snapshots/",
-  "Secured Central Repository" at "https://repo1.maven.org/maven2",
-  Resolver.sonatypeRepo("snapshots")
-)
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 // ammonite repl
 sourceGenerators in Test += Def.task {
@@ -87,4 +79,10 @@ sourceGenerators in Test += Def.task {
   IO.write(file, """object amm extends App { ammonite.Main().run() }""")
   Seq(file)
 }.taskValue
+
+// Protobuffer support
+
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceManaged in Compile).value
+)
 
