@@ -19,6 +19,13 @@ message AddLineItem {
     int32 quantity = 4;
 }
 
+message AddLineItems {
+    string user_id = 1 [(.cloudstate.entity_key) = true];
+    repeated LineItem line_items = 2;
+}
+
+
+
 message RemoveLineItem {
     string user_id = 1 [(.cloudstate.entity_key) = true];
     string product_id = 2;
@@ -42,6 +49,14 @@ service ShoppingCart {
     rpc AddItem(AddLineItem) returns (google.protobuf.Empty) {
         option (google.api.http) = {
             post: "/cart/{user_id}/items/add",
+            body: "*",
+        };
+        option (.cloudstate.eventing).in = "items";
+    }
+
+    rpc AddItems(AddLineItems) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/cart/{user_id}/items/addmulti",
             body: "*",
         };
         option (.cloudstate.eventing).in = "items";
